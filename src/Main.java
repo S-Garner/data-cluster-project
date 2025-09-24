@@ -15,6 +15,7 @@
  */
 
 import java.io.IOException;
+import java.util.Random;
 
 public class Main {
     public static void main (String[] args) {
@@ -54,6 +55,32 @@ public class Main {
             }
             tally++;
         }
+
+        int dataSize = appObj.getData().size();
+        int clusterSize = appObj.getNoOfClusters();
+
+        if (clusterSize > dataSize){
+            System.err.println("ERROR: K MUST BE <= N");
+        }
+
+        int runs = appObj.getNoOfRuns();
+        double bestSSE = Double.POSITIVE_INFINITY;
+        int bestRun = -1;
+
+        long baseSeed = 42L;
+
+        for (int r = 1; r <= runs; r++) {
+            System.out.println("Run " + r);
+            System.out.println("-----");
+            double sse = KMeans.runOne(appObj, new Random(baseSeed + r));
+            if (sse < bestSSE) {
+                bestSSE = sse;
+                bestRun = r;
+            }
+            System.out.println();
+        }
+
+        System.out.println("Best Run: " + bestRun + ": SSE = " + bestSSE);
 
         /*
         try
