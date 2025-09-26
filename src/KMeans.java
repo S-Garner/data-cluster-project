@@ -47,7 +47,6 @@ public class KMeans {
                     break;
                 }
             }
-
             prevSSE = sse;
             centers = newCenters;
         }
@@ -110,16 +109,15 @@ public class KMeans {
                                                   int numOfClusters,
                                                   int dataLength,
                                                   List<double[]> oldCenters) {
-
         double[][] sums = new double[numOfClusters][dataLength];
         int[] counts = new int[numOfClusters];
 
         for (int i = 0; i < data.size(); i++) {
-            int k = assign[i];
-            double[] p = data.get(i);
-            counts[k]++;
-            for (int d = 0; d < dataLength; d++) {
-                sums[k][d] += p[d];
+            int cluster = assign[i];
+            double[] dataRow = data.get(i);
+            counts[cluster]++;
+            for (int j = 0; j < dataLength; j++) {
+                sums[cluster][j] += dataRow[j];
             }
         }
 
@@ -129,11 +127,11 @@ public class KMeans {
                 // keep old center if cluster is empty (base spec behavior)
                 centers.add(Arrays.copyOf(oldCenters.get(k), dataLength));
             } else {
-                double[] c = new double[dataLength];
+                double[] currentCenter = new double[dataLength];
                 for (int d = 0; d < dataLength; d++) {
-                    c[d] = sums[k][d] / counts[k];
+                    currentCenter[d] = sums[k][d] / counts[k];
                 }
-                centers.add(c);
+                centers.add(currentCenter);
             }
         }
         return centers;
