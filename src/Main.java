@@ -15,6 +15,7 @@
  */
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Random;
 
 public class Main {
@@ -26,61 +27,17 @@ public class Main {
             return;
         }
 
-        //GetData.setRowsAndColumnsNo(appObj);      // Set number of columns and rows
-        //appObj.setData(GetData.getRows(appObj));  // Get get data rows
-
         DataGetter.setRowsAndColumns(appObj);
         appObj.setData(DataGetter.getFullDataSet(appObj));
         appObj.setCenters(DataGetter.getCenters(appObj));
 
-        System.out.println("Showing data:\n");
-        appObj.displayData(appObj.getData());
-
-        System.out.println("Showing Centers:\n");
-        appObj.displayData(appObj.getCenters());
-
-        System.out.println("Showing Point : Center : Distance");
-
-        int tally = 0;
-
-        for (double[] pointRow : appObj.getData()) {
-            System.out.println("Point: " + tally + "\n");
-
-            System.out.print("Points: ");
-            appObj.displayPoint(pointRow);
-            for (int i = 0; i < appObj.getCenters().size(); i++) {
-                System.out.print("Center: ");
-                appObj.displayPoint(appObj.getCenters().get(i));
-                System.out.println(MathFuncs.getCenterDistance(pointRow, appObj.getCenters().get(i)));
-            }
-            tally++;
+        List<String> runOutput = Runner.runner(appObj);
+        try
+        {
+        ExportData.runWriter(appObj, runOutput);
+        } catch (IOException e) {
+            System.out.println(e);
         }
-
-        int dataSize = appObj.getData().size();
-        int clusterSize = appObj.getNoOfClusters();
-
-        if (clusterSize > dataSize){
-            System.err.println("ERROR: K MUST BE <= N");
-        }
-
-        int runs = appObj.getNoOfRuns();
-        double bestSSE = Double.POSITIVE_INFINITY;
-        int bestRun = -1;
-
-        long baseSeed = 42L;
-
-        for (int r = 1; r <= runs; r++) {
-            System.out.println("Run " + r);
-            System.out.println("-----");
-            double sse = KMeans.runOne(appObj, new Random(baseSeed + r));
-            if (sse < bestSSE) {
-                bestSSE = sse;
-                bestRun = r;
-            }
-            System.out.println();
-        }
-
-        System.out.println("Best Run: " + bestRun + ": SSE = " + bestSSE);
 
         /*
         try

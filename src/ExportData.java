@@ -12,6 +12,7 @@
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 public class ExportData {
@@ -39,6 +40,21 @@ public class ExportData {
         }
         outputWrite.flush();                                 // Clear out the writer
         outputWrite.close();                                 // Close out the writer
+    }
+
+    public static void runWriter (AppObj appObj, List<String> runOutput)
+        throws IOException
+    {
+        String base = removeTxt(appObj.getFile().getName());
+        String file = addOutputTxt(base);
+
+        //BufferedWriter outputWrite = new BufferedWriter(new FileWriter(file));
+
+        try (PrintWriter outputWriter = new PrintWriter(new FileWriter(file))) {
+            for (String line : runOutput) {
+                outputWriter.print(line);
+            }
+        }
     }
 
     /*

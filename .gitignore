@@ -1,0 +1,9 @@
+# Build artifacts
+out/
+*.class
+
+# Generated run outputs
+*-output.txt
+
+.DS_Store
+Thumbs.db

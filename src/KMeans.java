@@ -12,7 +12,9 @@ public class KMeans {
      */
 
     // This function will run perform one K-Means run run and return the sse
-    public static double runOne(AppObj appObj, Random randSeed) {
+    public static double runOne(AppObj appObj,
+                                Random randSeed,
+                                List<String> runOutput) {
         List<double[]> data = appObj.getData();                // get the data for this run
         int dataSize = data.size();                            //
         int numOfClusters = appObj.getNoOfClusters();          //
@@ -38,7 +40,8 @@ public class KMeans {
                                                          centers); // recompute
             sse = computeSSE(data, newCenters, assign);                                // SSE at end of iteration
 
-            System.out.println("Iteration " + t + ": SSE = " + sse);
+            //System.out.println("Iteration " + t + ": SSE = " + sse);
+            runOutput.add("Iteration " + t + ": SSE = " + sse + "\n");
 
             if (prevSSE != Double.POSITIVE_INFINITY) {
                 double improved = (prevSSE - sse) / prevSSE; // Improvements
@@ -75,7 +78,7 @@ public class KMeans {
 
         List<double[]> centers = new ArrayList<>(numOfClusters);
         for (int i = 0; i < numOfClusters; i++) {
-            // copy so we don’t alias original rows
+            // copy so that we do not get alias of the originals
             centers.add(Arrays.copyOf(data.get(indices.get(i)), dataLength));
         }
         return centers;
