@@ -1,0 +1,86 @@
+% Created 2025-09-27 Sat 19:25
+% Intended LaTeX compiler: pdflatex
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{titling}
+\pretitle{\begin{center}\Large}
+\posttitle{\par\end{center}}
+\preauthor{\begin{center}}
+\postauthor{\par}
+\predate{\begin{center}}
+\postdate{\par\end{center}}
+\renewcommand{\maketitle}{%
+\begin{center}
+\Large\thetitle\\[1ex]
+\normalsize\theauthor\\
+Dr. Emre Celebi\\
+CSCI 4372 - Data Clustering\\
+\thedate
+\end{center}
+}
+\usepackage[margin=1in]{geometry}
+\renewcommand{\baselinestretch}{1}
+\usepackage{times}
+\usepackage{indentfirst}
+\setlength{\parindent}{2em}
+\setlength{\parskip}{0em}
+\author{Seth Garner}
+\date{\today}
+\title{Phase Two Report}
+\hypersetup{
+ pdfauthor={Seth Garner},
+ pdftitle={Phase Two Report},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 28.2 (Org mode 9.7.31)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+\section*{\underline{Introduction}}
+\label{sec:orgd05f2fb}
+This report summarizes my implementation of the \textbf{standard k-means} for Phase 2. The goal is to read a dataset, initialize the \texttt{K} centers uniformly at random from the data points, then iterate assignment and update steps until convergence, printing the SSE for each iteration. The program uses 64-bit floating points for all attributes and avoids using the \texttt{sqrt()} and \texttt{pow()} as required from the requirements of the assignment.
+\subsubsection*{\underline{Data Structures}}
+\label{sec:org97a5e45}
+I store the dataset as a \texttt{List<double[]>}, where each array is a dimensional point. The first line of the file gives the \texttt{N} (points) and \texttt{D} (dimensions). Using a list of primitive arrays keeps the memory compact and iterations fast.
+\subsubsection*{\underline{Algorithm}}
+\label{sec:orgd71b746}
+\textbf{\textbf{Initialization:}} I select distinct indices uniformly at random (via shuffled index list) and copy those rows as the initial centers (no removal from the dataset).
+
+\textbf{\textbf{Assignment:}} For each point \texttt{x}, compute squared Euclidean distance to every center \texttt{c\_k}:
+\[
+d(x,c_k)=\sum_{j=1}^{D}(x_j-c_{k,j})^2
+\]
+Assign to the nearest center. Ties break to the smallest center index.
+
+\textbf{\textbf{Update:}} For each cluster, set the center to the mean of it's assigned points. If a cluster is empty, I keep the previous center.
+
+\textbf{\textbf{Convergence:}} After each iteration, compute SSE:
+\[
+\text{SSE}(t)=\sum_{i=1}^{N} \lVert x_i - c_{a(i)} \rVert^2
+\]
+Stop when \texttt{(SSE(t−1)−SSE(t))/SSE(t−1) < T} or when the iteration count reaches limit. It runs the algorithm the amount of runs with different randon initialization and report the per-iteration SSE and the best run's final SSE.
+\subsubsection*{\underline{Complexity}}
+\label{sec:orgbdbcd96}
+Each iteration costs \(O(NKD)\). Across the number of runs and iterations: \(O(R \cdot I \cdot N \cdot K \cdot D)\). Memory is \(O(ND + KD)\).
+\subsubsection*{\underline{Results}}
+\label{sec:org3d76a57}
+\begin{itemize}
+\item Printed SSE decreased per iteration iteration (never increased).
+\item \textbf{Iris Bezdek (K=3):} over \texttt{R=100} runs, I observed no run with SSE < 78.8514, consistent with the checks in the assignment.
+\item Timing was done using the \texttt{time} function in Linux command line, typical runs on medium datasets completed on average at 14.4 seconds. Random seeds were set as \texttt{baseSeed + runIndex} for reproducibility.
+\end{itemize}
+\subsubsection*{\underline{Notes/Limitations}}
+\label{sec:org94703f4}
+This submission uses uniform random initialization only. Empty clusters retain their previous centers.
+\end{document}
