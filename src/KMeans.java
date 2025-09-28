@@ -15,18 +15,18 @@ public class KMeans {
     public static double runOne(AppObj appObj,
                                 Random randSeed,
                                 List<String> runOutput) {
-        List<double[]> data = appObj.getData();                // get the data for this run
-        int dataSize = data.size();                            //
-        int numOfClusters = appObj.getNoOfClusters();          //
-        int maxIterations = appObj.getNoOfMaxIterations();     //
-        double convergence = appObj.getConvergenceThreshold(); //
+        List<double[]> data = appObj.getData();
+        int dataSize = data.size();
+        int numOfClusters = appObj.getNoOfClusters();
+        int maxIterations = appObj.getNoOfMaxIterations();
+        double convergence = appObj.getConvergenceThreshold();
 
         if (numOfClusters > dataSize) {
             System.err.println("ERROR: Number of clusters must be <= data size");
             return Double.POSITIVE_INFINITY;
         }
 
-        int dataLength = data.get(0).length;
+        int dataLength = appObj.getNoOfColumns();
         List<double[]> centers = initCenters(data, numOfClusters, randSeed);
         double prevSSE = Double.POSITIVE_INFINITY;
         double sse = Double.POSITIVE_INFINITY;
@@ -56,7 +56,7 @@ public class KMeans {
         return sse;
     }
 
-    /*
+    /**
      *
      * @param  data          - Data that will be used
      * @param  numOfClusters - Number of clusters
@@ -84,6 +84,17 @@ public class KMeans {
         return centers;
     }
 
+    /**
+     *
+     * @param  data    - The data for the run
+     * @param  centers - The centers we have for the datalist
+     * @return assign  - A parallel array for the data list
+     *
+     * This function will go through each row from the dataset. It will then loop through each
+     * center, and will get the distance from the datarow and each center. It will loop through
+     * until it finds the best distance. When it does, it will assign the bestK to the assigned
+     * array which is parallel to the datasize.
+     */
     public static int[] assignPoints(List<double[]> data, List<double[]> centers) {
         int dataSize = data.size();
         int centerSize = centers.size();
@@ -107,30 +118,39 @@ public class KMeans {
         return assign;
     }
 
+    /**
+     *
+     * @param  data          - The dataset
+     * @param  assign        - The assigned datapoints for centers
+     * @param  numOfClusters - Number of K
+     * @param  dataLength    - Length of the list of data
+     * @param  oldCenters    - Original centers
+     * @return centers       - The recalculated centers
+     */
     public static List<double[]> recomputeCenters(List<double[]> data,
                                                   int[] assign,
                                                   int numOfClusters,
                                                   int dataLength,
                                                   List<double[]> oldCenters) {
-        double[][] sums = new double[numOfClusters][dataLength];
-        int[] counts = new int[numOfClusters];
+        double[][] sums = new double[numOfClusters][dataLength]; // Holds the sum for coor of all points assinged for that cluster
+        int[] counts = new int[numOfClusters];                   // How many points are for that cluster
 
         for (int i = 0; i < data.size(); i++) {
-            int cluster = assign[i];
-            double[] dataRow = data.get(i);
-            counts[cluster]++;
+            int cluster = assign[i];        // What cluster this point is assigned to
+            double[] dataRow = data.get(i); // The points coor in the list
+            counts[cluster]++;              // Add one point to tthe cluster
             for (int j = 0; j < dataLength; j++) {
-                sums[cluster][j] += dataRow[j];
+                sums[cluster][j] += dataRow[j]; // Add this point's coor into cluster's sums
             }
         }
 
         List<double[]> centers = new ArrayList<>(numOfClusters);
         for (int k = 0; k < numOfClusters; k++) {
             if (counts[k] == 0) {
-                // keep old center if cluster is empty (base spec behavior)
+                // keep old center if cluster is empty
                 centers.add(Arrays.copyOf(oldCenters.get(k), dataLength));
             } else {
-                double[] currentCenter = new double[dataLength];
+                double[] currentCenter = new double[dataLength]; //
                 for (int d = 0; d < dataLength; d++) {
                     currentCenter[d] = sums[k][d] / counts[k];
                 }
@@ -140,6 +160,13 @@ public class KMeans {
         return centers;
     }
 
+    /**
+     *
+     * @param  data    - The dataset
+     * @param  centers - The centers that will be used
+     * @param  assign  - The assigned points to the respective center
+     * @return sse     - Returns the SSE of the rows and centers of this iteration
+     */
     public static double computeSSE(List<double[]> data,
                                     List<double[]> centers,
                                     int[] assign) {
@@ -151,6 +178,14 @@ public class KMeans {
     }
 
     // Finds the distance squared based on two double arrays, a & b
+    // Kept the variables non specific incase this method could be used in a future feature
+    // This is the solution to not using the sqrt() or pow() function
+    /**
+     *
+     * @param   a   - The first double[] array
+     * @param   b   - The second double[] array
+     * @return  sum - The sum found between
+     */
     private static double sqDist(double[] a, double[] b) {
         double sum = 0.0;
         for (int d = 0; d < a.length; d++) {
