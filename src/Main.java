@@ -28,9 +28,13 @@ public class Main {
         }
 
         DataGetter.setRowsAndColumns(appObj);
-        appObj.setData(DataGetter.getFullDataSet(appObj));
-        appObj.setCenters(DataGetter.getCenters(appObj));
 
+        //appObj.setData(DataGetter.getFullDataSet(appObj));
+        appObj.setData(DataGetter.normalize(DataGetter.getFullDataSet(appObj)));
+        
+        //appObj.setCenters(DataGetter.getCenters(appObj));
+        appObj.setCenters(DataGetter.randomPartitions(appObj));
+        
         List<String> runOutput = Runner.runner(appObj);
         try
         {

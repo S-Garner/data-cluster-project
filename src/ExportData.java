@@ -76,4 +76,17 @@ public class ExportData {
     public static String addOutputTxt (String string) {
         return string + "-output.txt"; //
     }
+
+    public static void writeSummary(AppObj appObj, List<String> table)
+        throws IOException 
+    {
+        String base = removeTxt(appObj.getFile().getName());
+        String file = base + "-results.csv";
+
+        try (BufferedWriter out = new BufferedWriter(new FileWriter(file))) {
+            out.write("Dataset,Normalization,InitMethod,InitialSSE,FinalSSE,Iterations\n");
+            for (String line : table)
+                out.write(line);
+        }
+    }
 }

@@ -127,4 +127,8 @@ public class ArgUtils {
         return true;
     }
 
+    private static void printUsage() {
+        System.out.println("Usage: java -cp out Main {file:filename} {int:no_clusters} {int:no_max_itr} {double:conv_thresh} {int:no_runs}");
+    }
+
 }

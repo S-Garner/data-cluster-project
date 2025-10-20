@@ -1,3 +1,13 @@
+/**
+ *   CSCI 4372: Phase 2: KMeans
+ *      Author: Seth Garner
+ *        Date: <2025-09-28 Sun>
+ * Style Guide: Style Guide: [[https:https://www.cs.cornell.edu/courses/JavaAndDS/JavaStyle.html][Cornell University Java Code Style Guidelines]]
+ * Description: {
+ *                   * Will find the kmeans of one run and return sse for that run
+ *              }
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,12 +43,8 @@ public class KMeans {
 
         for (int t = 1; t <= maxIterations; t++) {
             int[] assign = assignPoints(data, centers);                                // assign points to each center
-            List<double[]> newCenters = recomputeCenters(data,
-                                                         assign,
-                                                         numOfClusters,
-                                                         dataLength,
-                                                         centers); // recompute
-            sse = computeSSE(data, newCenters, assign);                                // SSE at end of iteration
+
+            sse = computeSSE(data, centers, assign);                                // SSE at end of iteration
 
             //System.out.println("Iteration " + t + ": SSE = " + sse);
             runOutput.add("Iteration " + t + ": SSE = " + sse + "\n");
@@ -46,12 +52,11 @@ public class KMeans {
             if (prevSSE != Double.POSITIVE_INFINITY) {
                 double improved = (prevSSE - sse) / prevSSE; // Improvements
                 if (improved < convergence) {                // If it converged, break
-                    centers = newCenters;
                     break;
                 }
             }
+            centers = recomputeCenters(data, assign, numOfClusters, dataLength, centers);
             prevSSE = sse;
-            centers = newCenters;
         }
         return sse;
     }
@@ -108,7 +113,7 @@ public class KMeans {
             for (int k = 0; k < centerSize; k++) {
                 double distance = sqDist(dataRow, centers.get(k));
                 // tie-break to smallest k
-                if (distance < bestDistance || (distance == bestDistance && k < bestK)) {
+                if (distance < bestDistance) {
                     bestDistance = distance;
                     bestK = k;
                 }

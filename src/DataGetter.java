@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -98,6 +99,112 @@ public class DataGetter {
         }
 
         return centers;
+    }
+
+    public static List<double[]> randomPartitions(AppObj appObj) {
+        List<double[]> data = appObj.getData();
+
+        int numOfRows = appObj.getNoOfRows();
+        int numOfClusters = appObj.getNoOfClusters();
+        int numOfColumns = appObj.getNoOfColumns();
+
+        Random random = new Random();
+
+        List<List<double[]>> clusters = new ArrayList<>(numOfClusters);
+
+        for (int i = 0; i < numOfClusters; i++) {
+            clusters.add(new ArrayList<>());
+        }
+
+        for (int i = 0; i < numOfRows; i++) {
+            int clusterId = random.nextInt(numOfClusters);
+            clusters.get(clusterId).add(data.get(i));
+        }
+
+        for (int i = 0; i < numOfClusters; i++) {
+            if (clusters.get(i).isEmpty()) {
+                for (int j = 0; j < numOfClusters; j++) {
+                    if (clusters.get(j).size() > 1) {
+                        double[] temp = clusters.get(j).remove(random.nextInt(clusters.get(j).size()));
+                        clusters.get(i).add(temp);
+                        break;
+                    }
+                }
+            }
+        }
+
+        List<double[]> centers = new ArrayList<>(numOfClusters);
+        for (List<double[]> cluster : clusters) {
+            double[] center = new double[numOfColumns];
+            if (cluster.isEmpty()) {
+                continue;
+            }
+
+            for (double[] point : cluster) {
+                for (int j = 0; j < numOfColumns; j++) {
+                    center[j] += point[j];
+                }
+            }
+
+            for (int j = 0; j < numOfColumns; j++) {
+                center[j] /= cluster.size();
+            }
+            centers.add(center);
+        }
+
+        return centers;
+    }
+
+    public static List<double[]> normalize(List<double[]> data) {
+        if (data.isEmpty()) {
+            System.err.println("Error: Data is empty, could not normalize");
+            return data;
+        }
+
+        int numOfColumns = data.get(0).length;
+
+        double[] min = new double[numOfColumns];
+        double[] max = new double[numOfColumns];
+
+        Arrays.fill(min, Double.POSITIVE_INFINITY);
+        Arrays.fill(max, Double.NEGATIVE_INFINITY);
+
+        for (double[] row : data){
+            for (int i = 0; i < numOfColumns; i++) {
+                double val = row[i];
+                
+                if (val < min[i]) {
+                    min[i] = val;
+                }
+
+                if (val > max[i]) {
+                    max[i] = val;
+                }
+            }
+        }
+
+        System.out.println("Column min values: " + Arrays.toString(min));
+        System.out.println("Column max values: " + Arrays.toString(max));
+
+        List<double[]> normalizedData = new ArrayList<>(data.size());
+
+        for (double[] row : data) {
+            double[] normalizedRow = new double[numOfColumns];
+
+            for (int i = 0; i < numOfColumns; i++) {
+                double range = max[i] - min[i];
+
+                if (range == 0.0) {
+                    normalizedRow[i] = 0.0;
+                }
+                else {
+                    normalizedRow[i] = (row[i] - min[i]) / range;
+                }
+            }
+            normalizedData.add(normalizedRow);
+        }
+
+        return normalizedData;
     }
 
 }
