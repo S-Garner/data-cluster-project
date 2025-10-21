@@ -2,11 +2,13 @@ public class RunResult {
     private double initialSSE;
     private double finalSSE;
     private int iterations;
+    private int runNumber;
 
     public RunResult() {
         this.initialSSE = 0.0;
         this.finalSSE = 0.0;
         this.iterations = 0;
+        this.runNumber = 0;
     }
 
     public RunResult(double initialSSE, double finalSSE, int iterations) {
@@ -27,6 +29,10 @@ public class RunResult {
         this.iterations = iterations;
     }
 
+    public void setRunNumber(int runNumber) {
+        this.runNumber = runNumber;
+    }
+
     public double getInitialSSE() { 
         return initialSSE; 
     }
@@ -37,6 +43,10 @@ public class RunResult {
     
     public int getIterations() { 
         return iterations; 
+    }
+
+    public int getRunNumber() {
+        return runNumber;
     }
 
 }

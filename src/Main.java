@@ -56,9 +56,17 @@ public class Main {
         List<String> runOutput2 = summary2.getRunOutput();
         RunResult bestResult2 = summary2.getResult();
 
+        System.out.println(appObj.getFile());
+
+        System.out.println();
+        System.out.println();
         System.out.printf(
-        "Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n"
-        , bestResult.getInitialSSE(), bestResult.getFinalSSE(), bestResult.getIterations());
+            "Best Run: %d,Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n", 
+            bestResult.getRunNumber(), 
+            bestResult.getInitialSSE(), 
+            bestResult.getFinalSSE(), 
+            bestResult.getIterations()
+        );
 
         try
         {
@@ -68,8 +76,12 @@ public class Main {
         }
 
         System.out.printf(
-        "Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n"
-        , bestResult2.getInitialSSE(), bestResult2.getFinalSSE(), bestResult.getIterations());
+            "Best Run: %d,Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n", 
+            bestResult2.getRunNumber(), 
+            bestResult2.getInitialSSE(), 
+            bestResult2.getFinalSSE(), 
+            bestResult2.getIterations()
+        );
 
         try{
         ExportData.runWriter(appObj2, runOutput2, 1);

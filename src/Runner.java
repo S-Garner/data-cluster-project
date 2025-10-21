@@ -84,6 +84,7 @@ public class Runner {
 
             // Run once
             RunResult current = KMeans.runOneDetailed(appObj, new Random(baseSeed + i), runOutput);
+            current.setRunNumber(i);
 
             // Compare to best
             if (current.getFinalSSE() < bestSSE) {
@@ -98,7 +99,7 @@ public class Runner {
         runOutput.add(String.format("Best Run: %d: SSE = %.6f", bestRun, bestSSE));
 
         // Return both in one container
-        return new RunSummary(bestResult, runOutput);
+        return new RunSummary(bestResult, runOutput, bestRun);
     }
 
 }
