@@ -22,23 +22,46 @@ public class Main {
     public static void main (String[] args) {
 
         AppObj appObj = ArgUtils.checkArgs(args); // Get Arguments
+        AppObj appObj2 = ArgUtils.checkArgs(args);
 
         if (appObj == null) {                     // Make sure object could be created
             return;
         }
 
         DataGetter.setRowsAndColumns(appObj);
+        DataGetter.setRowsAndColumns(appObj2);
 
         //appObj.setData(DataGetter.getFullDataSet(appObj));
         appObj.setData(DataGetter.normalize(DataGetter.getFullDataSet(appObj)));
+        appObj2.setData(DataGetter.normalize(DataGetter.getFullDataSet(appObj2)));
         
-        //appObj.setCenters(DataGetter.getCenters(appObj));
-        appObj.setCenters(DataGetter.randomPartitions(appObj));
+        appObj.setCenters(DataGetter.getCenters(appObj));
+        appObj2.setCenters(DataGetter.randomPartitions(appObj2));
+        //appObj.setCenters(DataGetter.randomPartitions(appObj));
         
         List<String> runOutput = Runner.runner(appObj);
+        RunResult bestResult = Runner.runnerWithResult(appObj);
+
+        List<String> runOutput2 = Runner.runner(appObj2);
+        RunResult bestResult2 = Runner.runnerWithResult(appObj2);
+
+        System.out.printf(
+        "Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n"
+        , bestResult.getInitialSSE(), bestResult.getFinalSSE(), bestResult.getIterations());
+
         try
         {
-        ExportData.runWriter(appObj, runOutput);
+        ExportData.runWriter(appObj, runOutput, 0);
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        System.out.printf(
+        "Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n"
+        , bestResult2.getInitialSSE(), bestResult2.getFinalSSE(), bestResult.getIterations());
+
+        try{
+        ExportData.runWriter(appObj2, runOutput2, 1);
         } catch (IOException e) {
             System.out.println(e);
         }

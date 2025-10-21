@@ -90,7 +90,7 @@ public class DataGetter {
             indices.add(i);
         }
 
-        Collections.shuffle(indices, new Random());
+        Collections.shuffle(indices, new Random(System.nanoTime()));
 
         List<double[]> centers = new ArrayList<>(appObj.getNoOfClusters());
 

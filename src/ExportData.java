@@ -23,11 +23,11 @@ public class ExportData {
      * @param appObj
      * @throws IOException
      */
-    public static void writer (AppObj appObj)
+    public static void writer (AppObj appObj, int runNumber)
         throws IOException
     {
         String base = removeTxt(appObj.getFile().getName()); // Removes .txt ext from the original file
-        String file = addOutputTxt(base);                    // Adds '-output.txt' to file
+        String file = addOutputTxt(base, runNumber);                    // Adds '-output.txt' to file
 
         BufferedWriter outputWrite = new BufferedWriter(new FileWriter(file)); // Create the buffer writer
 
@@ -42,11 +42,11 @@ public class ExportData {
         outputWrite.close();                                 // Close out the writer
     }
 
-    public static void runWriter (AppObj appObj, List<String> runOutput)
+    public static void runWriter (AppObj appObj, List<String> runOutput, int runNumber)
         throws IOException
     {
         String base = removeTxt(appObj.getFile().getName());
-        String file = addOutputTxt(base);
+        String file = addOutputTxt(base, runNumber);
 
         //BufferedWriter outputWrite = new BufferedWriter(new FileWriter(file));
 
@@ -73,8 +73,12 @@ public class ExportData {
      * @param string
      * @return string
      */
-    public static String addOutputTxt (String string) {
-        return string + "-output.txt"; //
+    public static String addOutputTxt (String string, int runNumber) {
+        if (runNumber > 0) {
+            return string + "-output-" + runNumber + ".txt"; //
+        } else {
+        return string + "-output.txt";
+        }
     }
 
     public static void writeSummary(AppObj appObj, List<String> table)
@@ -88,5 +92,32 @@ public class ExportData {
             for (String line : table)
                 out.write(line);
         }
+    }
+
+    public static void appendResults(AppObj appObj, String method,
+                                 List<String> runOutput, List<String> table)
+        throws IOException 
+    {
+        // extract last run’s SSE and iteration count
+        String dataset = appObj.getFile().getName();
+        String normalization = "Min-Max";
+        String finalLine = runOutput.get(runOutput.size() - 1);
+        String finalSSE = finalLine.replaceAll("[^0-9\\.]", "");
+
+        // crude way to find last iteration count
+        int iterations = 0;
+        for (String line : runOutput)
+            if (line.startsWith("Iteration"))
+                iterations++;
+
+        // approximate initial SSE from first iteration
+        String initSSE = "";
+        for (String line : runOutput) {
+            if (line.startsWith("Iteration 1"))
+                initSSE = line.replaceAll("[^0-9\\.]", "");
+        }
+
+        table.add(String.format("%s,%s,%s,%s,%s,%d%n",
+                dataset, normalization, method, initSSE, finalSSE, iterations));
     }
 }

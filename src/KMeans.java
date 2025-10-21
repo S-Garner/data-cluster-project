@@ -22,44 +22,108 @@ public class KMeans {
      */
 
     // This function will run perform one K-Means run run and return the sse
-    public static double runOne(AppObj appObj,
-                                Random randSeed,
-                                List<String> runOutput) {
-        List<double[]> data = appObj.getData();
-        int dataSize = data.size();
-        int numOfClusters = appObj.getNoOfClusters();
-        int maxIterations = appObj.getNoOfMaxIterations();
-        double convergence = appObj.getConvergenceThreshold();
+public static double runOne(AppObj appObj,
+                            Random randSeed,
+                            List<String> runOutput) {
+    List<double[]> data = appObj.getData();
+    int dataSize = data.size();
+    int numOfClusters = appObj.getNoOfClusters();
+    int maxIterations = appObj.getNoOfMaxIterations();
+    double convergence = appObj.getConvergenceThreshold();
 
-        if (numOfClusters > dataSize) {
-            System.err.println("ERROR: Number of clusters must be <= data size");
-            return Double.POSITIVE_INFINITY;
-        }
-
-        int dataLength = appObj.getNoOfColumns();
-        List<double[]> centers = initCenters(data, numOfClusters, randSeed);
-        double prevSSE = Double.POSITIVE_INFINITY;
-        double sse = Double.POSITIVE_INFINITY;
-
-        for (int t = 1; t <= maxIterations; t++) {
-            int[] assign = assignPoints(data, centers);                                // assign points to each center
-
-            sse = computeSSE(data, centers, assign);                                // SSE at end of iteration
-
-            //System.out.println("Iteration " + t + ": SSE = " + sse);
-            runOutput.add("Iteration " + t + ": SSE = " + sse + "\n");
-
-            if (prevSSE != Double.POSITIVE_INFINITY) {
-                double improved = (prevSSE - sse) / prevSSE; // Improvements
-                if (improved < convergence) {                // If it converged, break
-                    break;
-                }
-            }
-            centers = recomputeCenters(data, assign, numOfClusters, dataLength, centers);
-            prevSSE = sse;
-        }
-        return sse;
+    if (numOfClusters > dataSize) {
+        System.err.println("ERROR: Number of clusters must be <= data size");
+        return Double.POSITIVE_INFINITY;
     }
+
+    int dataLength = appObj.getNoOfColumns();
+    List<double[]> centers = initCenters(data, numOfClusters, randSeed);
+    double prevSSE = Double.POSITIVE_INFINITY;
+    double sse = Double.POSITIVE_INFINITY;
+
+    // --- NEW: compute Initial SSE before first iteration ---
+    int[] initialAssign = assignPoints(data, centers);
+    double initialSSE = computeSSE(data, centers, initialAssign);
+    runOutput.add(String.format("Initial SSE: %.6f\n", initialSSE));
+
+    int iterations = 0;
+
+    // k means loop
+    for (int t = 1; t <= maxIterations; t++) {
+        iterations++;
+        int[] assign = assignPoints(data, centers);
+        sse = computeSSE(data, centers, assign);
+
+        runOutput.add(String.format("Iteration %d: SSE = %.6f\n", t, sse));
+
+        if (prevSSE != Double.POSITIVE_INFINITY) {
+            double improved = (prevSSE - sse) / prevSSE;
+            if (improved < convergence) {
+                break;
+            }
+        }
+        centers = recomputeCenters(data, assign, numOfClusters, dataLength, centers);
+        prevSSE = sse;
+    }
+
+    // --- NEW: mark final results ---
+    runOutput.add(String.format("Final SSE: %.6f\n", sse));
+    runOutput.add(String.format("Iterations: %d\n", iterations));
+
+    return sse;
+}
+
+public static RunResult runOneDetailed(AppObj appObj,
+                                       Random randSeed,
+                                       List<String> runOutput) {
+    List<double[]> data = appObj.getData();
+    int dataSize = data.size();
+    int numOfClusters = appObj.getNoOfClusters();
+    int maxIterations = appObj.getNoOfMaxIterations();
+    double convergence = appObj.getConvergenceThreshold();
+
+    if (numOfClusters > dataSize) {
+        System.err.println("ERROR: Number of clusters must be <= data size");
+        return new RunResult(Double.NaN, Double.NaN, 0);
+    }
+
+    int dataLength = appObj.getNoOfColumns();
+    List<double[]> centers = initCenters(data, numOfClusters, randSeed);
+    double prevSSE = Double.POSITIVE_INFINITY;
+    double sse = Double.POSITIVE_INFINITY;
+
+    // --- Compute Initial SSE ---
+    int[] initialAssign = assignPoints(data, centers);
+    double initialSSE = computeSSE(data, centers, initialAssign);
+    runOutput.add(String.format("Initial SSE: %.6f\n", initialSSE));
+
+    int iterations = 0;
+
+    // --- Main loop ---
+    for (int t = 1; t <= maxIterations; t++) {
+        iterations++;
+        int[] assign = assignPoints(data, centers);
+        sse = computeSSE(data, centers, assign);
+
+        runOutput.add(String.format("Iteration %d: SSE = %.6f\n", t, sse));
+
+        if (prevSSE != Double.POSITIVE_INFINITY) {
+            double improved = (prevSSE - sse) / prevSSE;
+            if (improved < convergence) {
+                break;
+            }
+        }
+
+        centers = recomputeCenters(data, assign, numOfClusters, dataLength, centers);
+        prevSSE = sse;
+    }
+
+    runOutput.add(String.format("Final SSE: %.6f\n", sse));
+    runOutput.add(String.format("Iterations: %d\n", iterations));
+
+    // --- Return a RunResult object ---
+    return new RunResult(initialSSE, sse, iterations);
+}
 
     /**
      *

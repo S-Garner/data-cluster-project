@@ -1,0 +1,3 @@
+Dataset,Normalization,InitMethod,InitialSSE,FinalSSE,Iterations
+ecoli.txt,Min-Max,RandomSelection,174.30988183411023,235.35787396247615,58
+ecoli.txt,Min-Max,RandomPartition,174.30988183411023,235.35787396247615,58
