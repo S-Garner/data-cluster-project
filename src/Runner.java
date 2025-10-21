@@ -67,4 +67,38 @@ public class Runner {
 
         return bestResult;
     }
+
+    public static RunSummary runnerWithSummary(AppObj appObj) {
+        int runs = appObj.getNoOfRuns();
+        double bestSSE = Double.POSITIVE_INFINITY;
+        int bestRun = -1;
+
+        List<String> runOutput = new ArrayList<>();
+        long baseSeed = System.nanoTime();
+
+        RunResult bestResult = null;
+
+        for (int i = 1; i <= runs; i++) {
+            runOutput.add("Run " + i + "\n");
+            runOutput.add("-----\n");
+
+            // Run once
+            RunResult current = KMeans.runOneDetailed(appObj, new Random(baseSeed + i), runOutput);
+
+            // Compare to best
+            if (current.getFinalSSE() < bestSSE) {
+                bestSSE = current.getFinalSSE();
+                bestRun = i;
+                bestResult = current;
+            }
+
+            runOutput.add("\n");
+        }
+
+        runOutput.add(String.format("Best Run: %d: SSE = %.6f", bestRun, bestSSE));
+
+        // Return both in one container
+        return new RunSummary(bestResult, runOutput);
+    }
+
 }

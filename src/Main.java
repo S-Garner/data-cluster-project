@@ -38,12 +38,23 @@ public class Main {
         appObj.setCenters(DataGetter.getCenters(appObj));
         appObj2.setCenters(DataGetter.randomPartitions(appObj2));
         //appObj.setCenters(DataGetter.randomPartitions(appObj));
-        
-        List<String> runOutput = Runner.runner(appObj);
-        RunResult bestResult = Runner.runnerWithResult(appObj);
 
-        List<String> runOutput2 = Runner.runner(appObj2);
-        RunResult bestResult2 = Runner.runnerWithResult(appObj2);
+        RunSummary summary1 = new RunSummary();
+        RunSummary summary2 = new RunSummary();
+        
+        //List<String> runOutput = Runner.runner(appObj);
+        //RunResult bestResult = Runner.runnerWithResult(appObj);
+
+        //List<String> runOutput2 = Runner.runner(appObj2);
+        //RunResult bestResult2 = Runner.runnerWithResult(appObj2);
+
+        summary1 = Runner.runnerWithSummary(appObj);
+        List<String> runOutput = summary1.getRunOutput();
+        RunResult bestResult = summary1.getResult();
+
+        summary2 = Runner.runnerWithSummary(appObj2);
+        List<String> runOutput2 = summary2.getRunOutput();
+        RunResult bestResult2 = summary2.getResult();
 
         System.out.printf(
         "Initial SSE: %.6f, Final SSE: %.6f, Iterations: %d\n"

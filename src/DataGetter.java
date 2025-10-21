@@ -183,8 +183,8 @@ public class DataGetter {
             }
         }
 
-        System.out.println("Column min values: " + Arrays.toString(min));
-        System.out.println("Column max values: " + Arrays.toString(max));
+        //System.out.println("Column min values: " + Arrays.toString(min));
+        //System.out.println("Column max values: " + Arrays.toString(max));
 
         List<double[]> normalizedData = new ArrayList<>(data.size());
 
