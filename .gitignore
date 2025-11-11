@@ -8,3 +8,10 @@ out/
 .DS_Store
 Thumbs.db
 zip.sh
+*.sh
+.idea
+*.iml
+.vscode/
+*.json
+.vscode/launch.json
+Phase-3/y1API4LMZo8ov69z.mp4

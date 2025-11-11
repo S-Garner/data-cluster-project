@@ -1,3 +1,0 @@
-Dataset,Normalization,InitMethod,InitialSSE,FinalSSE,Iterations
-iris_bezdek.txt,Min-Max,RandomSelection,,6,1
-iris_bezdek.txt,Min-Max,RandomPartition,,6,1

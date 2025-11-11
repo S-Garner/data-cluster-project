@@ -1,0 +1,71 @@
+Dataset,Normalization,Initialization Method,Feature,Value,Run
+# Parameters: Cluster size - 8, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+ecoli.txt,Min-Max,Random Selection,Best Initial SSE,23.770205,30
+ecoli.txt,Min-Max,Random Selection,Best Final SSE,17.412818,31
+ecoli.txt,Min-Max,Random Selection,Best Iterations,6,5
+ecoli.txt,Min-Max,Random Partition,Best Initial SSE,26.537807,6
+ecoli.txt,Min-Max,Random Partition,Best Final SSE,17.429968,18
+ecoli.txt,Min-Max,Random Partition,Best Iterations,5,6
+# Parameters: Cluster size - 6, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+glass.txt,Min-Max,Random Selection,Best Initial SSE,25.237944,32
+glass.txt,Min-Max,Random Selection,Best Final SSE,18.342152,40
+glass.txt,Min-Max,Random Selection,Best Iterations,4,23
+glass.txt,Min-Max,Random Partition,Best Initial SSE,26.644355,11
+glass.txt,Min-Max,Random Partition,Best Final SSE,18.342152,96
+glass.txt,Min-Max,Random Partition,Best Iterations,5,25
+# Parameters: Cluster size - 2, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+ionosphere.txt,Min-Max,Random Selection,Best Initial SSE,705.204127,20
+ionosphere.txt,Min-Max,Random Selection,Best Final SSE,628.896024,3
+ionosphere.txt,Min-Max,Random Selection,Best Iterations,3,13
+ionosphere.txt,Min-Max,Random Partition,Best Initial SSE,687.28709,50
+ionosphere.txt,Min-Max,Random Partition,Best Final SSE,628.896024,4
+ionosphere.txt,Min-Max,Random Partition,Best Iterations,3,21
+# Parameters: Cluster size - 3, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+iris_bezdek.txt,Min-Max,Random Selection,Best Initial SSE,8.824045,37
+iris_bezdek.txt,Min-Max,Random Selection,Best Final SSE,6.982216,2
+iris_bezdek.txt,Min-Max,Random Selection,Best Iterations,4,5
+iris_bezdek.txt,Min-Max,Random Partition,Best Initial SSE,8.027606,27
+iris_bezdek.txt,Min-Max,Random Partition,Best Final SSE,6.982216,1
+iris_bezdek.txt,Min-Max,Random Partition,Best Iterations,3,27
+# Parameters: Cluster size - 6, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+landsat.txt,Min-Max,Random Selection,Best Initial SSE,2777.098667,27
+landsat.txt,Min-Max,Random Selection,Best Final SSE,1741.634918,43
+landsat.txt,Min-Max,Random Selection,Best Iterations,6,4
+landsat.txt,Min-Max,Random Partition,Best Initial SSE,2609.84846,49
+landsat.txt,Min-Max,Random Partition,Best Final SSE,1741.825775,87
+landsat.txt,Min-Max,Random Partition,Best Iterations,5,96
+# Parameters: Cluster size - 26, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+letter_recognition.txt,Min-Max,Random Selection,Best Initial SSE,4177.6,75
+letter_recognition.txt,Min-Max,Random Selection,Best Final SSE,2743.621578,68
+letter_recognition.txt,Min-Max,Random Selection,Best Iterations,8,75
+letter_recognition.txt,Min-Max,Random Partition,Best Initial SSE,4117.413333,46
+letter_recognition.txt,Min-Max,Random Partition,Best Final SSE,2740.863409,63
+letter_recognition.txt,Min-Max,Random Partition,Best Iterations,9,61
+# Parameters: Cluster size - 7, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+segmentation.txt,Min-Max,Random Selection,Best Initial SSE,589.599195,72
+segmentation.txt,Min-Max,Random Selection,Best Final SSE,386.996511,21
+segmentation.txt,Min-Max,Random Selection,Best Iterations,4,94
+segmentation.txt,Min-Max,Random Partition,Best Initial SSE,539.30714,13
+segmentation.txt,Min-Max,Random Partition,Best Final SSE,386.990559,68
+segmentation.txt,Min-Max,Random Partition,Best Iterations,5,1
+# Parameters: Cluster size - 4, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+vehicle.txt,Min-Max,Random Selection,Best Initial SSE,312.106585,56
+vehicle.txt,Min-Max,Random Selection,Best Final SSE,223.505628,44
+vehicle.txt,Min-Max,Random Selection,Best Iterations,5,16
+vehicle.txt,Min-Max,Random Partition,Best Initial SSE,308.437896,59
+vehicle.txt,Min-Max,Random Partition,Best Final SSE,223.556701,83
+vehicle.txt,Min-Max,Random Partition,Best Iterations,5,5
+# Parameters: Cluster size - 3, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+wine.txt,Min-Max,Random Selection,Best Initial SSE,69.740551,58
+wine.txt,Min-Max,Random Selection,Best Final SSE,48.954036,58
+wine.txt,Min-Max,Random Selection,Best Iterations,4,11
+wine.txt,Min-Max,Random Partition,Best Initial SSE,75.213229,23
+wine.txt,Min-Max,Random Partition,Best Final SSE,48.954036,32
+wine.txt,Min-Max,Random Partition,Best Iterations,4,6
+# Parameters: Cluster size - 10, Max iterations - 100, Convergence threshold - 0.001, Number of Runs - 100
+yeast.txt,Min-Max,Random Selection,Best Initial SSE,90.516441,21
+yeast.txt,Min-Max,Random Selection,Best Final SSE,58.556775,64
+yeast.txt,Min-Max,Random Selection,Best Iterations,6,28
+yeast.txt,Min-Max,Random Partition,Best Initial SSE,91.758068,86
+yeast.txt,Min-Max,Random Partition,Best Final SSE,58.417429,80
+yeast.txt,Min-Max,Random Partition,Best Iterations,6,50

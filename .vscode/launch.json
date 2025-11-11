@@ -1,23 +1,15 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {
             "type": "java",
-            "name": "Current File",
+            "name": "Debug DataCluster",
             "request": "launch",
-            "mainClass": "${file}",
-        },
-        {
-            "type": "java",
-            "name": "Main",
-            "request": "launch",
-            "mainClass": "Main",
-            "projectName": "data-cluster-project_a55aecef",
-            "args": "data/iris_bezdek.txt 3 100 0.0001 10"
+            "mainClass": "Main",     // or just "Main" if no package
+            "classPaths": [
+                "${workspaceFolder}/out" // ensure this points to absolute path
+            ],
+            "args": "data/iris_bezdek.txt phase4"
         }
     ]
 }

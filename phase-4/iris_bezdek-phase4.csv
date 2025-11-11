@@ -1,0 +1,17 @@
+Dataset,K,Index,Value,BestRun,BestFinalSSE
+iris_bezdek.txt,2,CH,354.365556,1,12.127791
+iris_bezdek.txt,2,SW,0.630047,1,12.127791
+iris_bezdek.txt,3,CH,359.845074,2,6.982216
+iris_bezdek.txt,3,SW,0.504769,2,6.982216
+iris_bezdek.txt,4,CH,314.472999,10,5.516933
+iris_bezdek.txt,4,SW,0.445065,10,5.516933
+iris_bezdek.txt,5,CH,289.505999,20,4.580949
+iris_bezdek.txt,5,SW,0.352571,20,4.580949
+iris_bezdek.txt,6,CH,273.358074,36,3.923721
+iris_bezdek.txt,6,SW,0.347572,36,3.923721
+iris_bezdek.txt,7,CH,258.845047,42,3.470819
+iris_bezdek.txt,7,SW,0.337184,42,3.470819
+iris_bezdek.txt,8,CH,246.383744,68,3.131532
+iris_bezdek.txt,8,SW,0.336404,68,3.131532
+iris_bezdek.txt,9,CH,240.633723,46,2.809402
+iris_bezdek.txt,9,SW,0.321312,46,2.809402
