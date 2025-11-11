@@ -88,6 +88,7 @@ public class ValidatorRunner {
                 best.getFinalSSE()
             );
 
+            // Calculate the silhouette score
             double sw = InternalValidity.silhouette(
                 base.getData(),
                 best.getFinalAssign(),
