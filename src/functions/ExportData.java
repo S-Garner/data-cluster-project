@@ -144,7 +144,7 @@ public class ExportData {
         String base = dataset.replace(".txt", "");
         String file = base + "-phase4.csv";
 
-        System.out.println("Rows to write: " + rows.size());
+        //System.out.println("Rows to write: " + rows.size());
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("Dataset,K,Index,Value,BestRun,BestFinalSSE\n");

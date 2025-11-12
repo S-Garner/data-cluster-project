@@ -9,7 +9,6 @@
  */
 
 package functions;
-import java.util.List;
 
 public class MathFuncs {
 

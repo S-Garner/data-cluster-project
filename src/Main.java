@@ -10,21 +10,21 @@
  *                  * {Cont.}
  *                  * Export Data to file
  *              }
- *     Compile: javac -d out src/*.java {OR} ./build -> Will also run test
- *     Compile (New): javac -d out $(find src -name "*.java")
- *         Run: java -cp out Main {file:filename} {int:no_clusters} {int:no_max_itr} {double:conv_thresh} {int:no_runs}
+ *     Compile: (OLD AFTER PHASE 2): javac -d out src/*.java {OR} ./build -> Will also run test
+ *     Compile  (New):               javac -d out $(find src -name "*.java")
+ *         Run:                      java -cp out Main {file:filename} {int:no_clusters} {int:no_max_itr} {double:conv_thresh} {int:no_runs}
  *         
- *         FOR PHASE 4
- *         Run (New): java -cp out Main {file:filename} phase4
+ *         *** FOR PHASE 4 ***
+ *         Run (New): java -cp out Main {file:filename} {int:no_clusters} {int:no_max_itr} {double:conv_thresh} {int:no_runs} phase4
+ * 
+ *         As you can tell, the number of clusters is redundant here, however is still required because of my poor design
+ *         I'm sorry for the inconvenience, but it's a lot of work to change
  */
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Random;
 
 import data.DataGetter;
 import functions.ArgUtils;
@@ -40,8 +40,8 @@ public class Main {
 
     public static void main(String[] args) {
         // If user calls Phase 4 mode (args[1] == "phase4")
-        if (args.length == 2 && args[1].equalsIgnoreCase("phase4")) {
-            runPhase4(args[0]);
+        if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("phase4")) {
+            runPhase4(args); // first arg is dataset file
             return;
         } else {
             runPhase3(args);
@@ -91,19 +91,20 @@ public class Main {
     }
 
     // ---------------------------- Phase 4 ----------------------------
-    private static void runPhase4(String dataFile) {
+    private static void runPhase4(String[] args) {
         System.out.println("Running Phase 4: Internal Validation...");
-        AppObj appObj = new AppObj();
-        appObj.setFile(new File(dataFile));
+
+        String[] phaseArgs = new String[args.length - 1];
+        System.arraycopy(args, 0, phaseArgs, 0, args.length - 1);
+
+        AppObj appObj = ArgUtils.checkArgs(phaseArgs);
+        if (appObj == null) return;
 
         // Load / normalize
         DataGetter.setRowsAndColumns(appObj);
         appObj.setData(DataGetter.normalize(DataGetter.getFullDataSet(appObj)));
 
-        // Set the required paramaeters
-        appObj.setNoOfMaxIterations(100);
-        appObj.setConvergenceThreshold(0.001);
-        appObj.setNoOfRuns(100);
+        String dataFile = appObj.getFile().getName();
 
         int N = appObj.getNoOfRows();
         int Kmin = 2;
@@ -122,14 +123,14 @@ public class Main {
 
         Duration totalTime = Duration.between(startTime, endTime);
         System.out.printf("Total time: %d seconds%n%n", totalTime.getSeconds());
-        /*
+        
         try {
             ExportData.writerPhase4(appObj.getFile().getName(), Kmin, Kmax, results);
             System.out.println("Phase 4 CSV written successfully.");
         } catch (IOException e) {
             System.out.println("Error writing Phase 4 output: " + e.getMessage());
         }
-        */
+        
     }
 
 }
