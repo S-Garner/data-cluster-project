@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Random;
+import java.util.ArrayList;
 
 import data.DataGetter;
 import functions.ArgUtils;
@@ -35,6 +37,8 @@ import functions.ValidatorRunner;
 import objects.AppObj;
 import objects.RunResult;
 import objects.RunSummary;
+import functions.KMeans;
+import functions.ExternalValidity;
 
 public class Main {
 
@@ -42,6 +46,9 @@ public class Main {
         // If user calls Phase 4 mode (args[1] == "phase4")
         if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("phase4")) {
             runPhase4(args); // first arg is dataset file
+            return;
+        } else if (args.length > 0 && args[args.length - 1].equalsIgnoreCase("phase5")) {
+            runPhase5(args);
             return;
         } else {
             runPhase3(args);
@@ -132,6 +139,71 @@ public class Main {
         }
         
     }
+
+    private static void runPhase5(String[] args) {
+
+        String[] phaseArgs = new String[args.length - 1];
+        System.arraycopy(args, 0, phaseArgs, 0, args.length - 1);
+
+        AppObj appObj = ArgUtils.checkArgs(phaseArgs);
+        if (appObj == null) return;
+
+        DataGetter.loadDataWithLabels(appObj);
+
+        List<double[]> norm = DataGetter.normalize(appObj.getData());
+        appObj.setData(norm);
+
+        int K = appObj.getNoOfClusters();
+        int[] truth = appObj.getTrueLabels();
+        int R = appObj.getNoOfRuns();
+
+        double bestRand = -1.0;
+        double bestJaccard = -1.0;
+        double bestFM = -1.0;
+
+        int bestRandRun = -1;
+        int bestJaccardRun = -1;
+        int bestFMRun = -1;
+
+    for (int r = 0; r < R; r++) {
+    
+        List<String> dummy = new ArrayList<>();
+    
+        RunResult runResult = KMeans.runOneDetailed(
+            appObj,
+            new Random(System.nanoTime() + r),
+            dummy
+        );
+    
+        int[] predicted = runResult.getFinalAssign();
+    
+        double rand = ExternalValidity.randIndex(truth, predicted);
+        double jacc = ExternalValidity.jaccardIndex(truth, predicted);
+        double fm   = ExternalValidity.fowlkesMallowsIndex(truth, predicted);
+    
+        if (rand > bestRand) {
+            bestRand = rand;
+            bestRandRun = r;
+        }
+        if (jacc > bestJaccard) {
+            bestJaccard = jacc;
+            bestJaccardRun = r;
+        }
+        if (fm > bestFM) {
+            bestFM = fm;
+            bestFMRun = r;
+        }
+    }
+
+        ExportData.writePhase5(
+            appObj.getFile().getName(),
+            K,
+            bestRand, bestRandRun,
+            bestJaccard, bestJaccardRun,
+            bestFM, bestFMRun
+        );
+    }
+
 
 }
 

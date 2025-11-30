@@ -223,4 +223,70 @@ public class DataGetter {
         return normalizedData;
     }
 
+    public static void loadDataWithLabels(AppObj appObj) {
+        List<double[]> data = new ArrayList<>();
+    
+        try (Scanner scanner = new Scanner(appObj.getFile())) {
+            if (!scanner.hasNextInt()) {
+                throw new IllegalArgumentException("Missing number of points in header.");
+            }
+            int N = scanner.nextInt();
+        
+            if (!scanner.hasNextInt()) {
+                throw new IllegalArgumentException("Missing (attributes + 1) in header.");
+            }
+            int dimsPlusOne = scanner.nextInt();
+        
+            if (!scanner.hasNextInt()) {
+                throw new IllegalArgumentException("Missing number of true clusters in header.");
+            }
+            int trueK = scanner.nextInt();
+        
+            int D = dimsPlusOne - 1;
+            if (D <= 0) {
+                throw new IllegalArgumentException("Header implies non-positive number of attributes.");
+            }
+        
+            appObj.setNoOfRows(N);
+            appObj.setNoOfColumns(D);
+        
+            int[] trueLabels = new int[N];
+        
+            for (int i = 0; i < N; i++) {
+                double[] row = new double[D];
+                for (int j = 0; j < D; j++) {
+                    if (!scanner.hasNextDouble()) {
+                        throw new IllegalArgumentException(
+                            "Not enough numeric attributes on line " + (i + 2)
+                        );
+                    }
+                    row[j] = scanner.nextDouble();
+                }
+            
+                if (!scanner.hasNextInt()) {
+                    throw new IllegalArgumentException(
+                        "Missing true label on line " + (i + 2)
+                    );
+                }
+                int label = scanner.nextInt();
+                if (label < 0 || label >= trueK) {
+                    throw new IllegalArgumentException(
+                        "True label out of range on line " + (i + 2)
+                        + ": " + label + " (expected 0.." + (trueK - 1) + ")"
+                    );
+                }
+            
+                data.add(row);
+                trueLabels[i] = label;
+            }
+        
+            appObj.setData(data);
+            appObj.setTrueLabels(trueLabels);
+            appObj.setNoOfClusters(trueK); // K = #true clusters for Phase 5
+        
+        } catch (FileNotFoundException e) {
+            System.out.println("Error: File not found: " + appObj.getFile().getName());
+        }
+    }
+
 }

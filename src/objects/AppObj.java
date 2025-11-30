@@ -24,6 +24,7 @@ public class AppObj {
     private int                noOfRuns;
     private List<double[]>     data;
     private List<double[]>     centers;
+    private int[]              trueLabels;
 
     private final int MIN = 1;
 
@@ -69,6 +70,7 @@ public class AppObj {
     public int            getMin()                  { return MIN; }
     public List<double[]> getData()                 { return data; }
     public List<double[]> getCenters()              { return centers; }
+    public int[]          getTrueLabels()           { return trueLabels; }
 
     public void setConvergenceThreshold(double convergenceThreshold) { this.convergenceThreshold = convergenceThreshold; }
     public void setFile(File file)                                   { this.file = file; }
@@ -79,6 +81,7 @@ public class AppObj {
     public void setNoOfRows(int noOfRows)                            { this.noOfRows = noOfRows; }
     public void setData(List<double[]> data)                         { this.data = data; }
     public void setCenters(List<double[]> centers)                   { this.centers = centers; }
+    public void setTrueLabels(int[] labels)                          { this.trueLabels = labels; }
 
     /**
      * Used for displaying data

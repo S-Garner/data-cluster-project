@@ -15,6 +15,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.io.File;
 
 import objects.AppObj;
 
@@ -157,4 +158,42 @@ public class ExportData {
             }
         }
     }
+
+    public static void writePhase5(
+        String datasetName,
+        int trueClusterCount,
+        double bestRand, int bestRandRun,
+        double bestJaccard, int bestJaccardRun,
+        double bestFM, int bestFMRun) {
+
+        String header = "Dataset,True_Clusters,Best_Rand,Best_Rand_Run,"
+                      + "Best_Jaccard,Best_Jaccard_Run,"
+                      + "Best_FM,Best_FM_Run";
+
+        File outFile = new File("phase5_results.csv");
+
+        boolean exists = outFile.exists();
+
+        try (PrintWriter pw = new PrintWriter(new FileWriter(outFile, true))) {
+
+            if (!exists) {
+                pw.println(header);
+            }
+
+            pw.println(
+                datasetName + "," +
+                trueClusterCount + "," +
+                bestRand + "," +
+                bestRandRun + "," +
+                bestJaccard + "," +
+                bestJaccardRun + "," +
+                bestFM + "," +
+                bestFMRun
+            );
+
+        } catch (IOException e) {
+            System.out.println("Error writing Phase 5 results: " + e.getMessage());
+        }
+    }
+
 }
